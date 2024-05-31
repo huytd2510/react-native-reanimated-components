@@ -1,6 +1,6 @@
 {
   "name": "@quannh.2871/react-native-reanimated-components",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "React Native Reanimated components",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
