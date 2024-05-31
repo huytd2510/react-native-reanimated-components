@@ -1,17 +1,22 @@
 import {ReactElement} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
+
+const {height: deviceHeight} = Dimensions.get('window');
 
 export const OVERDRAG = 24;
-export const DEFAULT_VIEW_HEIGHT = 300;
+export const DEFAULT_VIEW_MIN_HEIGHT = deviceHeight * 0.1;
+export const DEFAULT_VIEW_MAX_HEIGHT = deviceHeight * 0.6;
 
 export interface ISheetConfig {
-  height?: number;
+  maxHeight?: number;
+  minHeight?: number;
   overDrag?: number;
 }
 
 export const SHEET_CONFIG: ISheetConfig = {
-  height: DEFAULT_VIEW_HEIGHT,
   overDrag: OVERDRAG,
+  minHeight: DEFAULT_VIEW_MIN_HEIGHT,
+  maxHeight: DEFAULT_VIEW_MAX_HEIGHT,
 };
 
 export interface BottomSheetRef {
@@ -47,12 +52,12 @@ export const styles = StyleSheet.create({
   },
 
   indicator: {
-    height: 8,
-    width: 42,
+    height: 4,
+    width: 54,
 
     borderRadius: 12,
 
-    backgroundColor: '#ccc',
+    backgroundColor: '#ECECF2',
 
     marginVertical: 8,
     alignSelf: 'center',

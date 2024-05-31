@@ -12,7 +12,14 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {BottomSheetRef, ISheetConfig, ISimpleBottomSheetProps, SHEET_CONFIG, styles} from './types';
+import {
+  BottomSheetRef,
+  DEFAULT_VIEW_MIN_HEIGHT,
+  ISheetConfig,
+  ISimpleBottomSheetProps,
+  SHEET_CONFIG,
+  styles,
+} from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -23,6 +30,7 @@ const SimpleBottomSheet: ForwardRefRenderFunction<BottomSheetRef, ISimpleBottomS
   const config: ISheetConfig = {...SHEET_CONFIG, ...props.config};
   const [isShowSheet, setIsShowSheet] = useState(false);
 
+  const sheetHeight = useSharedValue<number>(DEFAULT_VIEW_MIN_HEIGHT);
   const offset = useSharedValue(0);
 
   const show = () => {
@@ -48,15 +56,14 @@ const SimpleBottomSheet: ForwardRefRenderFunction<BottomSheetRef, ISimpleBottomS
   const pan = Gesture.Pan()
     .onChange((event) => {
       const offsetDelta = event.changeY + offset.value;
-
       const clamp = Math.max(-config.overDrag!, offsetDelta);
-      offset.value = offsetDelta > 0 ? offsetDelta : clamp;
+      offset.value = offsetDelta > 0 ? offsetDelta : withSpring(clamp);
     })
     .onFinalize(() => {
-      if (offset.value < config.height! / 3) {
+      if (offset.value < sheetHeight.value / 3) {
         offset.value = withSpring(0);
       } else {
-        offset.value = withTiming(config.height!, {}, () => {
+        offset.value = withTiming(sheetHeight.value, {}, () => {
           runOnJS(toggle)();
         });
       }
@@ -67,6 +74,11 @@ const SimpleBottomSheet: ForwardRefRenderFunction<BottomSheetRef, ISimpleBottomS
   }));
 
   if (!isShowSheet) return null;
+
+  const customStyles = {
+    maxHeight: config.maxHeight,
+    minHeight: config.minHeight,
+  };
 
   return (
     <>
@@ -79,9 +91,12 @@ const SimpleBottomSheet: ForwardRefRenderFunction<BottomSheetRef, ISimpleBottomS
 
       <GestureDetector gesture={pan}>
         <Animated.View
-          style={[styles.bottomSheet, {height: config.height}, translateY]}
+          style={[styles.bottomSheet, customStyles, translateY]}
           entering={SlideInDown.springify().damping(16)}
-          exiting={SlideOutDown}>
+          exiting={SlideOutDown}
+          onLayout={(event) => {
+            sheetHeight.value = event.nativeEvent.layout.height;
+          }}>
           <View style={styles.indicator} />
           {props.children}
         </Animated.View>

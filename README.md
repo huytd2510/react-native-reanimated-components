@@ -5,17 +5,15 @@ React Native Reanimated components
 ## Installation
 
 ```sh
-npm install react-native-reanimated-components
+yarn add @quannh.2871/react-native-reanimated-components
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-reanimated-components';
+import {AnimatedPageControl, AnimatedBottomSheet} from 'react-native-reanimated-components';
 
 // ...
-
-const result = await multiply(3, 7);
 ```
 
 ## Contributing
