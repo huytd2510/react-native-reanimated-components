@@ -1,19 +1,30 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-reanimated-components';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {AnimatedPageControl, AnimatedBottomSheet} from 'react-native-reanimated-components';
+import {BottomSheetRef} from '../../src/components/bottom-sheet/types';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
+  const sheetRef = React.createRef<BottomSheetRef>();
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => {
+            sheetRef.current?.show();
+          }}
+          style={{marginBottom: 36, borderWidth: 0.5, borderRadius: 36, padding: 12,}}>
+          <Text>Show sheet</Text>
+        </TouchableOpacity>
+
+        <AnimatedPageControl count={5} activeIndex={1} dotSize={10} dotSpacing={10} />
+
+        <AnimatedBottomSheet ref={sheetRef}>
+          <View style={{height: 300, backgroundColor: 'green'}} />
+        </AnimatedBottomSheet>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
