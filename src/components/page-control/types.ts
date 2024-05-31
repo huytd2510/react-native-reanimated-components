@@ -1,5 +1,4 @@
 import {StyleProp, ViewStyle} from 'react-native';
-
 export interface IAnimatedPageControlProps {
   count: number;
   activeIndex: number;

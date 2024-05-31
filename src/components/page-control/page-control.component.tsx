@@ -1,17 +1,8 @@
 import React, {useEffect} from 'react';
-import {ViewStyle} from 'react-native';
-import {StyleProp} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 
 import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
-
-export interface IAnimatedPageControlProps {
-  count: number;
-  activeIndex: number;
-  dotSize?: number;
-  dotSpacing?: number;
-  containerStyle?: StyleProp<ViewStyle>;
-}
+import {IAnimatedPageControlProps} from './types';
 
 const AnimatedPageControl = ({
   count,
@@ -19,16 +10,17 @@ const AnimatedPageControl = ({
   dotSize = 8,
   dotSpacing = 6,
   containerStyle,
+  shouldDisplayIndicator = true,
 }: IAnimatedPageControlProps) => {
   const dotPositions = Array.from({length: count}, (_, i) => i);
 
   const animatedActiveDot = useSharedValue(activeIndex);
 
   useEffect(() => {
-    if (animatedActiveDot.value !== activeIndex && activeIndex < count) {
+    if (animatedActiveDot.value !== activeIndex) {
       animatedActiveDot.value = activeIndex;
     }
-  }, [activeIndex, animatedActiveDot, count]);
+  }, [activeIndex, animatedActiveDot]);
 
   const dotIndicatorStyle = useAnimatedStyle(() => {
     const translateX = withTiming(animatedActiveDot.value * (dotSize + dotSpacing));
@@ -37,18 +29,19 @@ const AnimatedPageControl = ({
     };
   });
 
-  const dotStyle = {width: dotSize, height: dotSize, borderRadius: dotSize};
+  if (!shouldDisplayIndicator) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, containerStyle]}>
       {dotPositions.map((position) => (
-        <View
-          key={`dot-position-${position + 1}`}
-          style={[styles.dot, dotStyle, {marginRight: dotSpacing}]}
-        />
+        <View key={`dot-position-${position + 1}`} style={styles.dot} />
       ))}
 
-      <Animated.View style={[styles.activeDot, dotStyle, dotIndicatorStyle]} />
+      <Animated.View
+        style={[styles.activeDot, {width: dotSize, height: dotSize}, dotIndicatorStyle]}
+      />
     </View>
   );
 };
