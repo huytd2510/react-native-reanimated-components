@@ -91,7 +91,7 @@ const SimpleBottomSheet: ForwardRefRenderFunction<BottomSheetRef, ISimpleBottomS
 
       <GestureDetector gesture={pan}>
         <Animated.View
-          style={[styles.bottomSheet, customStyles, translateY]}
+          style={[styles.bottomSheet, props.customStyle, customStyles, translateY]}
           entering={SlideInDown.springify().damping(16)}
           exiting={SlideOutDown}
           onLayout={(event) => {

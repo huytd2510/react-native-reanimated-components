@@ -1,5 +1,5 @@
 import {ReactElement} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, ViewStyle} from 'react-native';
 
 const {height: deviceHeight} = Dimensions.get('window');
 
@@ -28,6 +28,7 @@ export interface BottomSheetRef {
 export interface ISimpleBottomSheetProps {
   children: ReactElement;
   config?: ISheetConfig;
+  customStyle?: ViewStyle;
 }
 
 export const styles = StyleSheet.create({
